@@ -1,0 +1,50 @@
+### Procurement API - HTTP requests for manual testing
+# Replace placeholders like {{mrId}} and {{prId}} with real IDs returned by the API.
+
+### Create Material Requisition
+POST http://localhost:3000/api/procurement/mr
+Content-Type: application/json
+
+{
+  "department": "IT",
+  "requestedBy": "alice@example.com",
+  "items": [
+    {
+      "itemCode": "IT-001",
+      "description": "Laptop",
+      "quantity": 2,
+      "unitOfMeasure": "PCS"
+    }
+  ]
+}
+
+### Submit Material Requisition (use returned MR id)
+POST http://localhost:3000/api/procurement/mr/{{mrId}}/submit
+
+
+### Approve Material Requisition (use returned MR id)
+POST http://localhost:3000/api/procurement/mr/{{mrId}}/approve
+Content-Type: application/json
+
+{
+  "approvedBy": "manager@example.com"
+}
+
+
+### Get Purchase Request by id (replace {{prId}})
+GET http://localhost:3000/api/procurement/pr/{{prId}}
+
+
+### Approve Purchase Request
+POST http://localhost:3000/api/procurement/pr/{{prId}}/approve
+Content-Type: application/json
+
+{
+  "approvedBy": "procurement-manager@example.com"
+}
+
+
+### Notes
+# 1) Create MR -> use `mr.id` from response to call submit/approve.
+# 2) MR approval triggers PR creation (synchronous domain event) so inspect logs or PR repository to find created PR id.
+# 3) If you run the app on a different port or host, update the URLs above.
